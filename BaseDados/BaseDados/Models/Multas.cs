@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -15,6 +16,26 @@ namespace BaseDados.Models {
         public decimal ValorMulta { get; set; }
 
         public DateTime DataDaMulta { get; set; }
+
+        //*********************************
+        //criação das Chaves Forasteiras
+        //*********************************
+
+        //FK para Viatura
+        /*anotação  --> anota sempre o que está por baixo */
+        [ForeignKey("Viatura")]
+        public int ViaturaFK { get; set; } //Base de dados
+        public Viaturas Viatura { get; set; } //C#
+
+        //FK para Condutor
+        [ForeignKey("Condutor")]
+        public int CondutorFK { get; set; } //Base de dados
+        public Condutores Condutor { get; set; } //C#
+
+        //FK para agentes
+        [ForeignKey("Agente")]
+        public int AgenteFK { get; set; } //Base de dados
+        public Agentes Agente { get; set; } //C#
 
 
     }

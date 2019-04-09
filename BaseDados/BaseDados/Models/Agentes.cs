@@ -13,5 +13,9 @@ namespace BaseDados.Models {
         public string Esquadra { get; set; }
 
         public string Fotografia { get; set; }
+
+        //*************************************
+        //lista das multas associadas ao Agente
+        public ICollection<Multas> ListaDeMultas { get; set; }
     }
 }

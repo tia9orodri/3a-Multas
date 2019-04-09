@@ -22,6 +22,10 @@ namespace BaseDados.Models {
 
         public string CodPostalDono { get; set; }
 
+        //*************************************
+        //lista das multas associadas à Viatura
+        public ICollection<Multas> ListaDeMultas { get; set; }
+
 
     }
 }
