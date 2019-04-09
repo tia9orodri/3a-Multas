@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using System.Web;
 
@@ -19,6 +20,14 @@ namespace BaseDados.Models {
         public virtual DbSet<Condutores> Condutores { get; set; } // tabela Condutores
         public virtual DbSet<Agentes> Agentes { get; set; } // tabela Agentes
         public virtual DbSet<Viaturas> Viaturas { get; set; } // tabela Viaturas
+
+        //método a ser executado no inicio da criação do Modelo
+        protected override void OnModelCreating(DbModelBuilder modelBuilder) {
+            //eliminar a convenção de atribuir automáticamente 'on Delete Cascade' nas FKs
+            modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
+            modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();
+            base.OnModelCreating(modelBuilder);
+        }
 
 
     }
