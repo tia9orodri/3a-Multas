@@ -134,6 +134,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Agentes.cs" />
     <Compile Include="Models\Condutores.cs" />
+    <Compile Include="Models\keyAttribute.cs" />
     <Compile Include="Models\Multas.cs" />
     <Compile Include="Models\MultasDB.cs" />
     <Compile Include="Models\Viaturas.cs" />
