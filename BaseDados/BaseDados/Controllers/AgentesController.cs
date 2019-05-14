@@ -46,7 +46,7 @@ namespace BaseDados.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Nome,Esquadra,Fotografia")] Agentes agentes)
+        public ActionResult Create([Bind(Include = "ID,Nome,Esquadra,Fotografia")] Agentes agentes, HttpPostedFileBase fotografia)
         {
             if (ModelState.IsValid)
             {
@@ -109,9 +109,28 @@ namespace BaseDados.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Agentes agentes = db.Agentes.Find(id);
-            db.Agentes.Remove(agentes);
-            db.SaveChanges();
+            Agentes agente = db.Agentes.Find(id);
+
+            try
+            {
+                db.Agentes.Remove(agente);
+                db.SaveChanges();
+            }
+            catch(Exception)
+            {
+                //captura a excessão e processa o código para resolver o problema
+                //pode haver mais de que um 'catch' associado a um 'try'
+
+                //enviar mensagem de erro para o utilizador
+                ModelState.AddModelError("", "Ocorreu um erro com a eliminação do Agente "
+                                             + agente.Nome+
+                                             ". Provavelmente relacionado com o facto do agente ter" +
+                                             "emitido multas...");
+
+                //devolver os dados do agente à View
+                return View(agente);
+            }
+            //redirecciona o interface para view Index associada ao controller Agentes
             return RedirectToAction("Index");
         }
 
