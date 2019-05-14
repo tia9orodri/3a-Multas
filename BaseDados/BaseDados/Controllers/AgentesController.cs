@@ -76,6 +76,11 @@ namespace BaseDados.Controllers
         // POST: Agentes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// concretizar a operacao de remocao de um agente
+        /// </summary>
+        /// <param name="agentes">identificador do agente</param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,Nome,Esquadra,Fotografia")] Agentes agentes)
@@ -90,26 +95,90 @@ namespace BaseDados.Controllers
         }
 
         // GET: Agentes/Delete/5
+        /// <summary>
+        /// mostra na view os dados de um agente para posterior, eventual, remoçao
+        /// </summary>
+        /// <param name="id">indentificador do agente a remover</param>
+        /// <returns></returns>
         public ActionResult Delete(int? id)
         {
+            //o ID do agente não foi fornecido
+            //nao é possivel procurar o Agente
+            //o que devo fazer?
+            
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                //opçao por defeito do template
+                // return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+                ///e não há id do agente, uma de duas coisas aconteceu
+                ///   - há um erro nos links da aplicação
+                ///   - há um 'chico esperto' a fazer asneiras no URL
+
+                ///redirecciono o utilizador para o ecrã principal
+                return RedirectToAction("Index");
             }
-            Agentes agentes = db.Agentes.Find(id);
-            if (agentes == null)
+
+            //avaliar se o Método de delete que é fornecido
+            //é o mesmo id que foi apresentado no ecra
+            string operacao = "Agentes/Delete";
+            if (operacao != (string)Session["Método"]) {
+                return RedirectToAction("Index");
+                }
+
+
+            //avaliar se o id do agente que é fornecido
+            //é o mesmo id que foi apresentado no ecra
+
+            if (id != (int)Session["IdAgente"]) {
+                return RedirectToAction("Index");
+                }
+            //procura os dados do agente cujos dados sao fornecidos
+            Agentes agente = db.Agentes.Find(id);
+
+            ///se o agente nao for encontrado
+            if (agente == null)
             {
-                return HttpNotFound();
+                ///Ou há um erro no código,
+                ///ou há um chico esperto a alterar o URL
+                ///redirecciono o utilizador para o ecrã principal
+                return RedirectToAction("Index");
             }
-            return View(agentes);
+            
+
+            //para o caso do utilizador alterar, de forma fraudulenta os dados, vamos guardá-los internamente
+            //para isso, vou guardar o valor do ID do agente
+            // - guardar o ID do Agente num cookie cifrado
+            //- guardar o ID numa var. de sessao (quem estiver a user Asp.net Core já nao tem esta ferramenta...)
+            // - Outras opçoes 
+
+            Session["IdAgente"] = agente.ID;
+            Session["Método"] = "Agentes/Delete";
+            
+
+
+            //envia para a View os dados do agente encontrado
+            return View(agente);
         }
 
         // POST: Agentes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int? id)
         {
-            Agentes agente = db.Agentes.Find(id);
+            if (id == null) {
+				//se entrei aqui, é porque há um erro
+				//nao se sabe o ID do agente a remover
+				return RedirectToAction("Index");
+            }
+
+			//procurar os dados do Agente, na BD
+			Agentes agente = db.Agentes.Find(id);
+			if (agente==null) {
+				//nao foi possivel encontrar o agente
+				return RedirectToAction("Index");
+			}
+            
 
             try
             {
