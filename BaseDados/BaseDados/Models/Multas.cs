@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
@@ -10,11 +11,11 @@ namespace BaseDados.Models {
         public int ID { get; set; }
 
         public string Infracao { get; set; }
-
+        [Display(Name ="Local da Multa")]
         public string LocalDaMulta { get; set; }
 
         public decimal ValorMulta { get; set; }
-
+        [Display(Name = "Data da aplicaçao da Multa")]
         public DateTime DataDaMulta { get; set; }
 
         //*********************************

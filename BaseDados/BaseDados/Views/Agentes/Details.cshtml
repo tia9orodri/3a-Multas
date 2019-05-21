@@ -4,37 +4,82 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+    <h2>Detaçhes do Agente<i>@Model.Nome </i></h2>
 
-<div>
-    <h4>Agentes</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Nome)
-        </dt>
+    <div>
+        <h4>Agentes</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Nome)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Nome)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Nome)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Esquadra)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Esquadra)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Esquadra)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Esquadra)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Fotografia)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Fotografia)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Fotografia)
-        </dd>
+            <dd>
+                @*Indicaçao da imagem do(a) Agente*@
+                @*<img src="~/imagens/@Html.DisplayFor(model => model.Fotografia)"
+                alt="Imagem do(a) agente @Html.DisplayFor(model => model.Nome)"
+                title="@Html.DisplayFor(model => model.Nome)"
+                width="150" />*@
 
-    </dl>
+                <img src="~/imagens/@Model.Fotografia)"
+                     alt="Imagem do(a) agente @Model.Nome"
+                     title="@Model.Nome"
+                     width="150" />
+            </dd>
+
+        </dl>
+
+
+
+
+        @*#######################################################################################
+        apresentaçao de multas do agente listado na parte de cima da View*@
+
+
+        <hr />
+        <h3> Lista de Multas associadas ao(à) Agente </h3>
+        <table class="table">
+            <tr>
+                <th> @Html.DisplayNameFor(model => model.ListaDeMultas.FirstOrDefault().DataDaMulta)
+                <th />
+                <th> @Html.DisplayNameFor(model => model.ListaDeMultas.FirstOrDefault().LocalDaMulta)
+                <th />
+                <th> @Html.DisplayNameFor(model => model.ListaDeMultas.FirstOrDefault().Condutor.Nome)
+                <th />
+                <th> @Html.DisplayNameFor(model => model.ListaDeMultas.FirstOrDefault().Viatura.Matricula)
+                <th />
+
+            <tr />
+
+            @*dados das multas*@
+            @foreach (var multa in Model.ListaDeMultas) {
+        <tr>
+            <td>@multa.DataDaMulta</td>
+            <td>@multa.LocalDaMulta</td>
+            <td>@Html.ActionLink(multa.Condutor.Nome,"Details","Condutores",new {id = multa.Condutor.ID},null)</td>
+            <td>@multa.Viatura.Matricula</td>
+        </tr>
+
+                }
+
+
+            </table>
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |

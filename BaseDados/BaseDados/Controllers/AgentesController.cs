@@ -25,17 +25,21 @@ namespace BaseDados.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Index");
             }
             Agentes agentes = db.Agentes.Find(id);
             if (agentes == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Index");
             }
             return View(agentes);
         }
 
         // GET: Agentes/Create
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Create()
         {
             return View();
@@ -44,18 +48,38 @@ namespace BaseDados.Controllers
         // POST: Agentes/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// recolhe os dados da View, sobre um novo agente
+        /// </summary>
+        /// <param name="agente">dados do novo agente</param>
+        /// <param name="fotografia">ficheiro com a foto do novo Agente</param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Nome,Esquadra,Fotografia")] Agentes agentes, HttpPostedFileBase fotografia)
+        public ActionResult Create([Bind(Include = "Nome,Esquadra")] Agentes agente, HttpPostedFileBase fotografia)
         {
-            if (ModelState.IsValid)
-            {
-                db.Agentes.Add(agentes);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+            ///1º será que foi enviado um ficheiro ?
+            ///2º será que o ficheiro, se foi fornecido, é do tipo correto ?
+            ///3º qual o nome a atribuir ao ficheiro?
+            ///4º como o associar ao novo agente?
+            ///5º como guardar no disco rígido? e onde?
+
+            //confronta os dados que vem da View com a forma que os dados devem ter
+            //isto é, valida os dados com o Modelo
+            if (ModelState.IsValid){
+                try {
+                    db.Agentes.Add(agente);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch (Exception) {
+
+                    throw;
+                }
+                
             }
 
-            return View(agentes);
+            return View(agente);
         }
 
         // GET: Agentes/Edit/5
