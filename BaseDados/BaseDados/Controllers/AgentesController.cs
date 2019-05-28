@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -58,11 +59,47 @@ namespace BaseDados.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Nome,Esquadra")] Agentes agente, HttpPostedFileBase fotografia)
         {
-            ///1º será que foi enviado um ficheiro ?
-            ///2º será que o ficheiro, se foi fornecido, é do tipo correto ?
-            ///3º qual o nome a atribuir ao ficheiro?
-            ///4º como o associar ao novo agente?
-            ///5º como guardar no disco rígido? e onde?
+
+            //variaveis auxiliares
+            string caminho = " ";
+            bool ficheiroValido = false;
+
+			//1º será que foi enviado um ficheiro ?
+			if (fotografia == null) {
+                agente.Fotografia = "noUser.png";
+			} else{
+                //2º será que o ficheiro, se foi fornecido, é do tipo correto ?
+                string mimeType = fotografia.ContentType;
+                if(mimeType=="image/jpeg" || mimeType == "image/png") {
+                    //o ficheiro é do tipo correto
+                    
+                //3º qual o nome a atribuir ao ficheiro?
+
+                Guid g;
+                g = Guid.NewGuid(); // obtem os dados para o nome do ficheiro
+                //e qual a extensao do ficheiro
+                string extensao = Path.GetExtension(fotografia.FileName).ToLower();
+                //montar o novo nome
+                string nomeFicheiro = g.ToString() + extensao;
+                //onde guardar o ficheiro ?
+                caminho = Path.Combine(Server.MapPath("~/imagens/"),nomeFicheiro);
+
+
+                //4º como o associar ao novo agente?
+                agente.Fotografia = nomeFicheiro;
+
+                    //marcar ficheiro como valido
+                    ficheiroValido = true;
+                //5º como guardar no disco rígido? e onde?
+                }else {
+                    agente.Fotografia = "noUser.png";
+                }
+            }
+
+                
+
+              
+				            
 
             //confronta os dados que vem da View com a forma que os dados devem ter
             //isto é, valida os dados com o Modelo
@@ -70,6 +107,8 @@ namespace BaseDados.Controllers
                 try {
                     db.Agentes.Add(agente);
                     db.SaveChanges();
+
+                    if(ficheiroValido) fotografia.SaveAs(caminho);
                     return RedirectToAction("Index");
                 }
                 catch (Exception) {
