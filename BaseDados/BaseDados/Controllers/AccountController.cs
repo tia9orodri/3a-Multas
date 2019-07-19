@@ -9,7 +9,7 @@ using System.Web.Mvc;
 
 namespace BaseDados.Controllers
 {
-    [Authorize]
+    [Authorize]  //obriga a que os utilizadores estejam autenticados
     public class AccountController : Controller
     {
         public AccountController()

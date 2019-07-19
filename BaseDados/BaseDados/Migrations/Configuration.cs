@@ -21,8 +21,16 @@ namespace BaseDados.Migrations {
             //*********************************************************************
             // adiciona AGENTES
             var agentes = new List<Agentes> {
-               new Agentes {ID=1, Nome="T�nia Vieira", Esquadra="Our�m", Fotografia="TaniaVieira.jpg" },
-               new Agentes {ID=2, Nome="Ant�nio Rocha", Esquadra="Our�m", Fotografia="AntonioRocha.jpg" },
+               new Agentes {ID=1,
+                   Nome ="T�nia Vieira",
+                   Esquadra ="Our�m",
+                   Fotografia ="TaniaVieira.jpg" ,
+                   UserNameID="tania"},
+               new Agentes {ID=2,
+                   Nome ="Ant�nio Rocha",
+                   Esquadra ="Our�m",
+                   Fotografia ="AntonioRocha.jpg",
+                   UserNameID="rh"},
                new Agentes {ID=3, Nome="Andr� Silveira", Esquadra="Abrantes", Fotografia="AndreSilveira.jpg" },
                new Agentes {ID=4, Nome="Lurdes Vieira", Esquadra="Leiria", Fotografia="LurdesVieira.jpg" },
                new Agentes {ID=5, Nome="Cl�udia Pinto", Esquadra="Porto", Fotografia="ClaudiaPinto.jpg" },

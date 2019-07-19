@@ -36,6 +36,15 @@ namespace BaseDados.Models {
         /// lista das multas associadas ao Agente
         /// </summary>
         public virtual ICollection<Multas> ListaDeMultas { get; set; }
-            //este termo virtual vai ativar a funcionalidade de lazy loading
-    }
+        //este termo virtual vai ativar a funcionalidade de lazy loading
+
+
+        //*******************************
+        // criar uma chave forasteira para ligar um Agente
+        //ao respetivo username
+       // [Required]
+        public string UserNameID { get; set; }
+        }
+
+
 }

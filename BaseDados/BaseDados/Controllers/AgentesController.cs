@@ -8,19 +8,32 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using BaseDados.Models;
+using Microsoft.AspNet.Identity;
 
 namespace BaseDados.Controllers
 {
+    [Authorize]  //obriga a que os utilizadores estejam autenticados
     public class AgentesController : Controller
     {
         private MultasDB db = new MultasDB();
 
         // GET: Agentes
+        [Authorize(Roles = "RecursosHumanos,Agentes")]//alem de autenticado, so os utilizadores do tipo RecursosHumanos ou Agentes tem acesso
         public ActionResult Index()
         {
-            return View(db.Agentes.ToList());
-        }
+            //SELECt * FROM Agentes ORDER BY Nome
+            var lista = db.Agentes
+                        .OrderBy( a => a.Nome)
+                        .ToList();
 
+            //filtrar os dados se a pessoa nao pertence ao ROLL ´RecursosHumanos`
+            if (!User.IsInRole("RecursosHumanos")) {
+                //Mostrar apenas os dados da pessoa
+                lista = lista.Where(a => a.UserNameID == User.Identity.GetUserId()).ToList();
+                }
+
+            return View(lista);
+        }
         // GET: Agentes/Details/5
         public ActionResult Details(int? id)
         {
@@ -41,6 +54,7 @@ namespace BaseDados.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
+        
         public ActionResult Create()
         {
             return View();
@@ -55,6 +69,7 @@ namespace BaseDados.Controllers
         /// <param name="agente">dados do novo agente</param>
         /// <param name="fotografia">ficheiro com a foto do novo Agente</param>
         /// <returns></returns>
+        [Authorize(Roles = "RecursosHumanos")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Nome,Esquadra")] Agentes agente, HttpPostedFileBase fotografia)
@@ -144,6 +159,7 @@ namespace BaseDados.Controllers
         /// </summary>
         /// <param name="agentes">identificador do agente</param>
         /// <returns></returns>
+        [Authorize(Roles = "RecursosHumanos")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,Nome,Esquadra,Fotografia")] Agentes agentes)
@@ -225,6 +241,7 @@ namespace BaseDados.Controllers
         }
 
         // POST: Agentes/Delete/5
+        [Authorize(Roles = "RecursosHumanos")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int? id)
